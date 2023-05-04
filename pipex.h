@@ -6,7 +6,7 @@
 /*   By: mbaanni <mbaanni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 08:45:34 by mbaanni           #+#    #+#             */
-/*   Updated: 2023/05/02 20:13:19 by mbaanni          ###   ########.fr       */
+/*   Updated: 2023/05/03 12:22:13 by mbaanni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ char	**new_split(char *av);
 void	count_word_in_cout(char *av, int *i, int *j, int *word);
 int		here_doc(char **av, int ac, int *fl);
 int		check_script(char *arg);
+void	fill_spaced_str(t_data *data, char **new, int i);
 int		ft_strpcmp(char *s1, char *s2);
 int		ft_error(char *bin, char **argu);
 int		ft_strcmp(char *s1, char *s2, int j);

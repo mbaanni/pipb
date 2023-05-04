@@ -6,11 +6,30 @@
 /*   By: mbaanni <mbaanni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 08:48:46 by mbaanni           #+#    #+#             */
-/*   Updated: 2023/05/02 20:08:22 by mbaanni          ###   ########.fr       */
+/*   Updated: 2023/05/03 19:23:34 by mbaanni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+int	open_and_check_error(char *name, int flag)
+{
+	int	fd;
+
+	if (flag == 0)
+		fd = open(name, O_RDONLY);
+	else
+		fd = open(name, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	if (fd < 0)
+	{
+		write(2, "pipex: ", 7);
+		write(2, name, ft_strlen(name));
+		perror(": ");
+		if (flag != 0)
+			exit(1);
+	}
+	return (fd);
+}
 
 int	command_1(t_pipes *pipes, char **av, char **envp)
 {
@@ -79,9 +98,9 @@ int	main(int ac, char **av, char **envp)
 		write(1, "Invalid number of arg\n", 23);
 		return (1);
 	}
-	pipes.fd[0] = open(av[1], O_RDONLY);
-	pipes.fd[1] = open(av[4], O_WRONLY | O_TRUNC | O_CREAT, 0644);
-	if (pipes.fd[0] < 0 || pipes.fd[1] < 0 || pipe(pipes.pp) == -1)
+	pipes.fd[0] = open_and_check_error(av[1], 0);
+	pipes.fd[1] = open_and_check_error(av[4], 1);
+	if (pipe(pipes.pp) == -1)
 	{
 		perror("pipex");
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: mbaanni <mbaanni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 22:25:17 by mbaanni           #+#    #+#             */
-/*   Updated: 2023/04/30 20:09:52 by mbaanni          ###   ########.fr       */
+/*   Updated: 2023/05/03 19:04:02 by mbaanni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	count_word_in_cout_alloc(t_data *data, char **new, int *i, int *t)
 {
 	while (data->av[*i] && data->av[*i] == ' ')
 		(*i)++;
+	if (!data->av[*i])
+		fill_spaced_str(data, new, *i);
 	if (data->av[*i] && (data->av[*i] == '"' || data->av[*i] == '\''))
 	{
 		data->j = next_cout(data->av, *i);
@@ -23,9 +25,14 @@ void	count_word_in_cout_alloc(t_data *data, char **new, int *i, int *t)
 		if (*i != data->j)
 		{
 			(*i)++;
-			new[data->k] = ft_calloc(sizeof(char) * (data->j - *i + 1));
+			new[data->k] = ft_calloc(sizeof(char) * (data->j - *i + 1));	
 			while (*i < data->j)
 			{
+				if (data->av[data->j - 1] != '"')
+				{
+					if (data->av[*i] == '"')
+						(*i)++;
+				}
 				new[data->k][*t] = data->av[*i];
 				(*t)++;
 				(*i)++;
@@ -85,18 +92,17 @@ void	fill_new(char *av, char **new)
 	}
 }
 
-int	word_count(char *av)
+int	word_count(char *av, int word)
 {
 	int	i;
 	int	j;
-	int	word;
 
 	i = 0;
 	j = 0;
-	word = 0;
-	if (av[i] && (av[i] == ' '))
-		while (av[i] && av[i] == ' ')
+	while (av[i] && av[i] == ' ')
 			i++;
+	if (!av[i])
+		word++;
 	while (av[i])
 	{
 		if (av[i] == ' ')
@@ -119,7 +125,7 @@ char	**new_split(char *av)
 	int		word;
 	char	**new;
 
-	word = word_count(av);
+	word = word_count(av, 0);
 	if (!word)
 		return (0);
 	new = ft_calloc(sizeof(char *) * (word + 1));

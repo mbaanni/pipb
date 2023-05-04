@@ -6,7 +6,7 @@
 /*   By: mbaanni <mbaanni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:56:00 by mbaanni           #+#    #+#             */
-/*   Updated: 2023/04/30 20:01:23 by mbaanni          ###   ########.fr       */
+/*   Updated: 2023/05/03 17:12:06 by mbaanni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,24 @@ int	ft_strpcmp(char *s1, char *s2)
 	return (0);
 }
 
-char	*find_bin(char **env)
+char	*find_bin(char **env, char *argu)
 {
+	int	i;
+
+	i = 0;
+	if (argu == 0)
+		return (0);
+	while (argu[i] && argu[i] == ' ')
+		i++;
+	if (argu[i] == 0)
+		return (0);
 	while (*env)
 	{
 		if (!ft_strpcmp(*env, "PATH=/"))
 			return (*env + 5);
 		env++;
 	}
-	return (0);
+	return ((void *) -1);
 }
 
 char	*check_path(char *argu, char **env)
@@ -46,13 +55,13 @@ char	*check_path(char *argu, char **env)
 
 	i = 0;
 	bin = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki";
-	if (!access(argu, X_OK))
+	if (!access(argu, F_OK))
 		return (argu);
-	path_full = find_bin(env);
-	if (!path_full)
+	path_full = find_bin(env, argu);
+	if (path_full == (void *)-1)
 		path_full = bin;
 	split_path = ft_split(path_full, ':');
-	while (split_path[i])
+	while (split_path && split_path[i] && bin != 0)
 	{
 		bin = ft_strjoin(split_path[i], "/");
 		bin = ft_strjoin(bin, argu);

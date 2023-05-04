@@ -6,7 +6,7 @@
 /*   By: mbaanni <mbaanni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 23:05:36 by mbaanni           #+#    #+#             */
-/*   Updated: 2023/04/30 15:16:12 by mbaanni          ###   ########.fr       */
+/*   Updated: 2023/05/03 19:00:18 by mbaanni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ int	next_cout(char *av, int i)
 		if (av[j] == c)
 		{
 			while (av[j + 1] && av[j + 1] != ' ')
+			{
+				
 				j++;
+			}
 			break ;
 		}
 		j++;
@@ -52,4 +55,19 @@ void	count_word_in_cout(char *av, int *i, int *j, int *word)
 		else
 			(*i)++;
 	}
+}
+
+void	fill_spaced_str(t_data *data, char **new, int i)
+{
+	int	j;
+
+	j = 0;
+	new[data->k] = ft_calloc(sizeof(char) * (i + 1));
+	while (i < j)
+	{
+		new[data->k][j] = data->av[j];
+		j++;
+	}
+	new[data->k][j] = 0;
+	data->k++;
 }
