@@ -17,6 +17,8 @@ void	pipe_redirection(t_pipes *pipes, int i, int fl, int ac)
 	if (i == 0)
 	{
 		close(pipes->pp[0]);
+		if (pipes->fd[0] < 0)
+			exit(1);
 		dup2(pipes->fd[0], 0);
 		dup2(pipes->pp[1], 1);
 	}
@@ -32,6 +34,8 @@ void	pipe_redirection(t_pipes *pipes, int i, int fl, int ac)
 		{
 			close(pipes->pp[1]);
 			dup2(pipes->prev, 0);
+			if (pipes->fd[1] < 0)
+				exit(1);
 			dup2(pipes->fd[1], 1);
 		}
 	}
@@ -101,8 +105,13 @@ void	open_files(t_pipes *pipes, int ac)
 				0644);
 	if (pipes->fd[0] < 0 || pipes->fd[1] < 0)
 	{
-		perror("pipex");
-		exit (1);
+		write(2, "pipex: ", 7);
+		if (pipes->fd[0] < 0)
+			write(2, pipes->av[1], ft_strlen(pipes->av[1]));
+		else
+			write(2, pipes->av[ac - 1], ft_strlen(pipes->av[ac - 1]));
+		write(2, ": ", 2);
+		perror(0);
 	}
 }
 

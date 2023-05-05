@@ -17,16 +17,17 @@ int	open_and_check_error(char *name, int flag)
 	int	fd;
 
 	if (flag == 0)
+	{
 		fd = open(name, O_RDONLY);
+	}
 	else
 		fd = open(name, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (fd < 0)
 	{
 		write(2, "pipex: ", 7);
 		write(2, name, ft_strlen(name));
-		perror(": ");
-		if (flag != 0)
-			exit(1);
+		write(2, ": ", 2);
+		perror(0);
 	}
 	return (fd);
 }
@@ -41,6 +42,8 @@ int	command_1(t_pipes *pipes, char **av, char **envp)
 	if (pipes->id == 0)
 	{
 		close(pipes->pp[0]);
+		if (pipes->fd[0] < 0)
+			exit(1);
 		dup2(pipes->fd[0], 0);
 		dup2(pipes->pp[1], 1);
 		argu = new_split(av[2]);
@@ -55,8 +58,7 @@ int	command_1(t_pipes *pipes, char **av, char **envp)
 			free(bin);
 		exit(13);
 	}
-	close(pipes->pp[1]);
-	return (pipes->pp[0]);
+	return (close(pipes->pp[1]), pipes->pp[0]);
 }
 
 void	command_2(t_pipes *pipes, char **av, char **envp, int prev)
@@ -70,6 +72,8 @@ void	command_2(t_pipes *pipes, char **av, char **envp, int prev)
 	{
 		dup2(prev, 0);
 		dup2(pipes->fd[1], 1);
+		if (pipes->fd[1] < 0)
+			exit(1);
 		argu = new_split(av[3]);
 		bin = check_path(*argu, envp);
 		if (access(bin, F_OK) != 0)
