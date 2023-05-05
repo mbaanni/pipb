@@ -24,17 +24,14 @@ int	next_cout(char *av, int i)
 		if (av[j] == c)
 		{
 			while (av[j + 1] && av[j + 1] != ' ')
-			{
-				
 				j++;
-			}
+			if (av[j] && av[j] != c && av[j] != ' ')
+				j++;
 			break ;
 		}
 		j++;
 	}
-	if (av[j])
-		i = j;
-	return (i);
+	return (j);
 }
 
 void	count_word_in_cout(char *av, int *i, int *j, int *word)
@@ -62,12 +59,26 @@ void	fill_spaced_str(t_data *data, char **new, int i)
 	int	j;
 
 	j = 0;
+	if (data->k)
+		return ;
 	new[data->k] = ft_calloc(sizeof(char) * (i + 1));
-	while (i < j)
+	while (j < i)
 	{
 		new[data->k][j] = data->av[j];
 		j++;
 	}
 	new[data->k][j] = 0;
 	data->k++;
+}
+
+void	fill_new_string(t_data *data, char **new, int *t, int *i)
+{
+	if (data->av[*i] && data->av[*i] == data->c)
+		(*i)++;
+	else
+	{
+		new[data->k][*t] = data->av[*i];
+		(*t)++;
+		(*i)++;
+	}
 }

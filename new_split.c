@@ -20,24 +20,19 @@ void	count_word_in_cout_alloc(t_data *data, char **new, int *i, int *t)
 		fill_spaced_str(data, new, *i);
 	if (data->av[*i] && (data->av[*i] == '"' || data->av[*i] == '\''))
 	{
+		data->c = data->av[*i];
 		data->j = next_cout(data->av, *i);
 		*t = 0;
 		if (*i != data->j)
 		{
 			(*i)++;
-			new[data->k] = ft_calloc(sizeof(char) * (data->j - *i + 1));	
+			new[data->k] = ft_calloc(sizeof(char) * (data->j - *i + 1));
 			while (*i < data->j)
 			{
-				if (data->av[data->j - 1] != '"')
-				{
-					if (data->av[*i] == '"')
-						(*i)++;
-				}
-				new[data->k][*t] = data->av[*i];
-				(*t)++;
-				(*i)++;
+				fill_new_string(data, new, t, i);
 			}
-			(*i)++;
+			if (data->av[*i])
+				(*i)++;
 			new[data->k][*t] = 0;
 			data->k++;
 		}
@@ -115,7 +110,7 @@ int	word_count(char *av, int word)
 		if (av[i] && av[i] != ' ' && av[i] != '"' && av[i] != '\'')
 			i++;
 	}
-	if (i - 1 > 0 && av[i - 1] != ' ')
+	if ((i - 1 > 0 && av[i - 1] != ' ') || (i == 1 && !av[1] && av[0] != ' '))
 		word++;
 	return (word);
 }

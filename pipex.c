@@ -48,7 +48,7 @@ int	command_1(t_pipes *pipes, char **av, char **envp)
 		dup2(pipes->pp[1], 1);
 		argu = new_split(av[2]);
 		bin = check_path(*argu, envp);
-		if (access(bin, F_OK) != 0)
+		if (!bin || access(bin, F_OK) != 0)
 			exit(ft_error(bin, argu));
 		if (execve(bin, argu, envp))
 			perror("pipex");
@@ -76,7 +76,7 @@ void	command_2(t_pipes *pipes, char **av, char **envp, int prev)
 			exit(1);
 		argu = new_split(av[3]);
 		bin = check_path(*argu, envp);
-		if (access(bin, F_OK) != 0)
+		if (!bin || access(bin, F_OK) != 0)
 			exit(ft_error(bin, argu));
 		if (execve(bin, argu, envp))
 			perror("pipex");
@@ -113,5 +113,6 @@ int	main(int ac, char **av, char **envp)
 	command_2(&pipes, av, envp, prev);
 	waitpid(pipes.id, &st, 0);
 	waitpid(pipes.id2, &st, 0);
+	(void)prev;
 	return (st >> 8 & 255);
 }

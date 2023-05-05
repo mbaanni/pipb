@@ -18,7 +18,7 @@ SRC= pipex.c ft_split.c f_calloc.c ft_strjoin.c ft_strlen.c new_split_utils.c\
 check_path.c skip_cout.c check_script.c new_split.c ft_error.c
 OBG= $(SRC:.c=.o)
 BOBG= $(BSRC:.c=.o)
-BNAME=pipexbonus
+BNAME=pipex_bonus
 NAME=pipex
 
 all : $(NAME)

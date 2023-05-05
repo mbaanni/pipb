@@ -26,24 +26,31 @@ int	ft_strpcmp(char *s1, char *s2)
 	return (0);
 }
 
-char	*find_bin(char **env, char *argu)
+char	*find_bin(char **env, char *argu, int *flag)
 {
 	int	i;
 
 	i = 0;
 	if (argu == 0)
+	{
+		*flag = 1;
 		return (0);
+	}
 	while (argu[i] && argu[i] == ' ')
 		i++;
 	if (argu[i] == 0)
+	{
+		*flag = 1;
 		return (0);
+	}
+	*flag = 0;
 	while (*env)
 	{
 		if (!ft_strpcmp(*env, "PATH=/"))
 			return (*env + 5);
 		env++;
 	}
-	return ((void *) -1);
+	return (0);
 }
 
 char	*check_path(char *argu, char **env)
@@ -53,13 +60,13 @@ char	*check_path(char *argu, char **env)
 	char	*bin;
 	int		i;
 
-	i = 0;
 	bin = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki";
 	if (!access(argu, F_OK))
 		return (argu);
-	path_full = find_bin(env, argu);
-	if (path_full == (void *)-1)
+	path_full = find_bin(env, argu, &i);
+	if (path_full == 0 && i == 0)
 		path_full = bin;
+	i = 0;
 	split_path = ft_split(path_full, ':');
 	while (split_path && split_path[i] && bin != 0)
 	{

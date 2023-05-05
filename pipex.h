@@ -36,6 +36,7 @@ typedef struct t_data
 	char	*av;
 	int		j;
 	int		k;
+	char	c;
 }t_data;
 
 char	**ft_split(char const *s, char c);
@@ -52,6 +53,7 @@ void	count_word_in_cout(char *av, int *i, int *j, int *word);
 int		here_doc(char **av, int ac, int *fl);
 int		check_script(char *arg);
 void	fill_spaced_str(t_data *data, char **new, int i);
+void	fill_new_string(t_data *data, char **new, int *t, int *i);
 int		ft_strpcmp(char *s1, char *s2);
 int		ft_error(char *bin, char **argu);
 int		ft_strcmp(char *s1, char *s2, int j);

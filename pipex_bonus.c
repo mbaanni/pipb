@@ -12,13 +12,13 @@
 
 #include "pipex.h"
 
-void	pipe_redirection(t_pipes *pipes, int i, int fl, int ac)
+int	pipe_redirection(t_pipes *pipes, int i, int fl, int ac)
 {
 	if (i == 0)
 	{
 		close(pipes->pp[0]);
 		if (pipes->fd[0] < 0)
-			exit(1);
+			return (1);
 		dup2(pipes->fd[0], 0);
 		dup2(pipes->pp[1], 1);
 	}
@@ -29,16 +29,15 @@ void	pipe_redirection(t_pipes *pipes, int i, int fl, int ac)
 			close(pipes->pp[0]);
 			dup2(pipes->prev, 0);
 			dup2(pipes->pp[1], 1);
+			return (0);
 		}
-		else
-		{
-			close(pipes->pp[1]);
-			dup2(pipes->prev, 0);
-			if (pipes->fd[1] < 0)
-				exit(1);
-			dup2(pipes->fd[1], 1);
-		}
+		close(pipes->pp[1]);
+		dup2(pipes->prev, 0);
+		if (pipes->fd[1] < 0)
+			return (1);
+		dup2(pipes->fd[1], 1);
 	}
+	return (0);
 }
 
 void	execute_it(t_pipes *pipes, int *id, int fl, int i)
@@ -76,7 +75,11 @@ int	multiple_command_ex(t_pipes *pipes, int *id, int ac, int fl)
 		fork_error(id[i], id);
 		if (id[i] == 0)
 		{
-			pipe_redirection(pipes, i, fl, ac);
+			if (pipe_redirection(pipes, i, fl, ac))
+			{
+				free(id);
+				exit(1);
+			}
 			execute_it(pipes, id, fl, i);
 		}
 		else
